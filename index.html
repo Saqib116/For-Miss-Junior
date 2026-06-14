@@ -35,22 +35,90 @@
             pointer-events: none;
         }
 
-        /* Music Start Overlay */
-        #music-overlay {
+        /* Google Simulation Overlay */
+        #google-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #ffe4e1, #fff0f5);
+            background: #ffffff;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             z-index: 9999;
-            text-align: center;
             padding: 20px;
             box-sizing: border-box;
+        }
+
+        .google-logo {
+            font-size: 3rem;
+            font-weight: bold;
+            font-family: 'Product Sans', sans-serif;
+            margin-bottom: 20px;
+        }
+
+        .google-search-bar {
+            width: 100%;
+            max-width: 500px;
+            border: 1px solid #dfe1e5;
+            padding: 15px 20px;
+            border-radius: 30px;
+            box-shadow: 0 1px 6px rgba(32,33,36,0.28);
+            font-size: 1.1rem;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            background: #fff;
+            margin-bottom: 30px;
+            min-height: 24px;
+        }
+
+        .google-results {
+            width: 100%;
+            max-width: 500px;
+            text-align: left;
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .did-you-mean {
+            color: #d93025;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+
+        .did-you-mean strong {
+            color: #1a0dab;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .result-card-google {
+            margin-bottom: 25px;
+            font-family: Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        .result-link {
+            color: #202124;
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+        }
+
+        .result-title {
+            color: #1a0dab;
+            font-size: 1.3rem;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-block;
+            margin-bottom: 6px;
+        }
+
+        .result-snippet {
+            color: #4d5156;
+            line-height: 1.5;
+            font-size: 1rem;
         }
 
         /* Hearts Background Animation */
@@ -190,11 +258,24 @@
     <!-- Hidden background target box for YouTube -->
     <div id="yt-player"></div>
 
-    <!-- Step 0: Welcome / Unblock Music Screen -->
-    <div id="music-overlay">
-        <h1 style="font-size: 2.5rem; margin-bottom: 10px;">For Mehwish ✨</h1>
-        <p style="font-size: 1.2rem; color: #666; margin-bottom: 30px;">I made something special for your birthday. Turn up your volume! 🎧</p>
-        <button class="btn" style="max-width: 280px;" onclick="startCelebration()">❤️ Open My Surprise</button>
+    <!-- Step 0: Google Simulation Screen -->
+    <div id="google-overlay">
+        <div class="google-logo">
+            <span style="color: #4285F4;">G</span><span style="color: #EA4335;">o</span><span style="color: #FBBC05;">o</span><span style="color: #4285F4;">g</span><span style="color: #34A853;">l</span><span style="color: #EA4335;">e</span>
+        </div>
+        <div class="google-search-bar" id="typing-box">🔍 </div>
+        
+        <div class="google-results" id="search-results">
+            <div class="did-you-mean">Did you mean: <strong>Mehwish (The absolute favorite person of my life)</strong></div>
+            
+            <div class="result-card-google">
+                <div class="result-link">https://www.mehwish-birthday.com</div>
+                <div class="result-title">Mehwish — The Most Special Human Ever Born</div>
+                <div class="result-snippet">Also beautifully known as <strong>Wishy</strong>, my favorite <strong>Shrarti Larki</strong>, and <strong>Miss Junior</strong>. Bringing 100% endless joy and laughter to my world every single day. Match found for June 15th.</div>
+            </div>
+            
+            <button class="btn" style="background: #1a0dab;" onclick="startCelebration()">❤️ Open Official Birthday Surprise</button>
+        </div>
     </div>
 
     <!-- Tab 1: Welcome -->
@@ -301,23 +382,46 @@
         let currentTab = 1;
         let player;
 
-        // Automatically initialized by the YouTube script asset
+        // Auto typing logic for the simulated Google Search bar
+        const phrase = "Who is the most beautiful and amazing person born on June 15th?";
+        let index = 0;
+        const typingBox = document.getElementById("typing-box");
+
+        function typeQuery() {
+            if (index < phrase.length) {
+                typingBox.innerHTML += phrase.charAt(index);
+                index++;
+                setTimeout(typeQuery, 60); 
+            } else {
+                setTimeout(showGoogleResults, 600); 
+            }
+        }
+
+        function showGoogleResults() {
+            document.getElementById("search-results").style.display = "block";
+        }
+
+        window.onload = function() {
+            setTimeout(typeQuery, 800);
+        };
+
+        // Automatically initialized with your customized video link ID
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('yt-player', {
                 height: '1',
                 width: '1',
-                videoId: '2_C9W66j_M0', 
+                videoId: 'P-wvieenopc', 
                 playerVars: {
                     'autoplay': 0,
                     'controls': 0,
                     'loop': 1,
-                    'playlist': '2_C9W66j_M0' 
+                    'playlist': 'P-wvieenopc' 
                 }
             });
         }
 
         function startCelebration() {
-            document.getElementById('music-overlay').style.display = 'none';
+            document.getElementById('google-overlay').style.display = 'none';
             document.getElementById('tab-1').style.display = 'block';
             
             if (player && typeof player.playVideo === 'function') {
